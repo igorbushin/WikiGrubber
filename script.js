@@ -10,6 +10,7 @@ $(document).ready(function() {
       isValidNumber = charsCount.checkValidity();
       fetchButton.disabled = !isValidNumber
     });
+    $('form').submit(false);
 })
 
 function fetchHTML() {
