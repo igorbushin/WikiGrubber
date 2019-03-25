@@ -98,8 +98,8 @@ function removeJunk(node, isContentChild = false) {
 
 function handleContent() {
     //перезапись контента
-    $(contentHolder).empty()
-    contentHolder.appendChild(originalContent.cloneNode(true))
+    //$(contentHolder).empty()
+    //contentHolder.appendChild(originalContent.cloneNode(true))
     var charsCount = parseInt($("#charsCount").val())
     console.log("now i will remove char "+currentChar+" and crap up to "+charsCount+" symbols")
     var contentText = document.getElementById("mw-content-text")
