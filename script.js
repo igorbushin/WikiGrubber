@@ -67,6 +67,7 @@ function removeJunk(node, isContentChild = false) {
         "navbox" //ссылки на доп статьи
     ]
     var junkIds = ["toc"]
+    var junkTags = ["style"]
     junkClasses.forEach(function(junkClass) {
         if($(node).hasClass(junkClass)) {
             node.remove()
@@ -78,6 +79,12 @@ function removeJunk(node, isContentChild = false) {
             node.remove()
             return false
         }
+    })
+    junkTags.map(function(value) {
+        if(node.nodeName == value) {
+            node.remove()
+            return false
+        }  
     })
     $(node).children().each(function(index, element) {
         isContentParent = removeJunk(element, isContentChild || isContent) || isContentParent
@@ -95,14 +102,16 @@ function handleContent() {
     contentHolder.appendChild(originalContent.cloneNode(true))
     var charsCount = parseInt($("#charsCount").val())
     console.log("now i will remove char "+currentChar+" and crap up to "+charsCount+" symbols")
-    dfsOverDOM(contentHolder, charsCount)
+    var contentText = document.getElementById("mw-content-text")
+    dfsOverDOM(contentText, charsCount)
 }
 
 function dfsOverDOM(node, leftChars) {
 	for (var i = 0; i < node.childNodes.length; ++i) {
 		leftChars = dfsOverDOM(node.childNodes[i], leftChars);
 	}
-	if(node.nodeName == "#text" && node.textContent) {
+    var isRootChild = $(node.parentNode).hasClass('mw-parser-output')
+	if(node.nodeName == "#text" && node.textContent && !isRootChild) {
         var str = node.textContent
         if(leftChars <= 0) {
             str = "";
