@@ -89,6 +89,11 @@ function removeJunk(node, isContentChild) {
             return false
         }  
     })
+    if(node.nodeName == "A") {
+        var span = document.createElement("span")
+        span.innerHTML = node.innerHTML
+        node.replaceWith(span)
+    }
     $(node).children().each(function(index, element) {
         isContentParent = removeJunk(element, isContentChild || isContent) || isContentParent
     })
