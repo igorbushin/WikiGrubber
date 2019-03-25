@@ -5,8 +5,10 @@
     	<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-	    <input id="charsCount" type="number" value="1000000" min="0">
-		<input type="button" value="Fetch" onclick="fetchHTML()">
+		<form>
+	    	<input id="charsCount" type="number" value="30" min="0" required>
+			<input id="fetchButton" type="button" value="Fetch" onclick="fetchHTML()">
+		</form>
 		<div id="contentHolder">
 			Here will be fetched page
 		</div>

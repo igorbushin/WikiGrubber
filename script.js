@@ -4,6 +4,12 @@ var contentHolder
 
 $(document).ready(function() {
     contentHolder = document.getElementById("contentHolder")
+    var charsCount = document.getElementById("charsCount");
+    var fetchButton = document.getElementById('fetchButton');
+    charsCount.addEventListener('keyup', function (event) {
+      isValidNumber = charsCount.checkValidity();
+      fetchButton.disabled = !isValidNumber
+    });
 })
 
 function fetchHTML() {
