@@ -1,10 +1,6 @@
 html, body{
 	height: 100%;
 }
-#contentHolder {
-	height: 90%;
-	background-color: gray;
-}
 #content {
 	margin-left: 0;
 }

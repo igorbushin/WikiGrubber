@@ -46,9 +46,10 @@ function loadContent(onComplete) {
             tmpDOM.removeChild(element)
         })
         removeJunk(originalContent, false)
-        $(tmpDOM).children().each(function(index, element) {
-            document.head.appendChild(element.cloneNode(true))
-        })
+        //копирование заголовка
+        // $(tmpDOM).children().each(function(index, element) {
+        //     document.head.appendChild(element.cloneNode(true))
+        // })
         $(contentHolder).empty()
         contentHolder.appendChild(originalContent.cloneNode(true))
         onComplete()
@@ -109,11 +110,17 @@ function handleContent() {
 }
 
 function dfsOverDOM(node, leftChars) {
-	for (var i = 0; i < node.childNodes.length; ++i) {
-		leftChars = dfsOverDOM(node.childNodes[i], leftChars);
-	}
+    for (var i = 0; i < node.childNodes.length;) {
+        if(leftChars == 0) {
+            node.childNodes[i].remove()
+        }
+        else {
+            leftChars = dfsOverDOM(node.childNodes[i], leftChars);   
+            i++
+        }
+    }
     var isRootChild = $(node.parentNode).hasClass('mw-parser-output')
-	if(node.nodeName == "#text" && node.textContent && !isRootChild) {
+    if(node.nodeName == "#text" && node.textContent && !isRootChild) {
         var str = node.textContent
         str = str.replace(new RegExp(currentChar, "gi"), "")
         if(leftChars <= 0) {
@@ -127,6 +134,6 @@ function dfsOverDOM(node, leftChars) {
             leftChars = leftChars - str.length;
         }
         node.textContent = str
-	}
+    }
     return leftChars
 }
