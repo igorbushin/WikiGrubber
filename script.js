@@ -43,7 +43,7 @@ function loadContent(onComplete) {
             originalContent.appendChild(element.cloneNode(true))
             tmpDOM.removeChild(element)
         })
-        removeJunk(originalContent)
+        removeJunk(originalContent, false)
         $(tmpDOM).children().each(function(index, element) {
             document.head.appendChild(element.cloneNode(true))
         })
@@ -53,7 +53,7 @@ function loadContent(onComplete) {
     })
 }
 
-function removeJunk(node, isContentChild = false) {
+function removeJunk(node, isContentChild) {
     var nodeClass = $(node).attr("className")
     var nodeId = $(node).attr("id")
     var isContent = nodeId == "mw-content-text"
