@@ -15,9 +15,6 @@ $(document).ready(function() {
 
 function fetchHTML() {
     updateCurrentChar()
-    if(currentChar > "я") {
-        return
-    }
     if(!originalContent) {
         loadContent(handleContent)
     }
@@ -30,7 +27,11 @@ function updateCurrentChar() {
     if(!currentChar) {
         currentChar = "а"
     }
-    else {
+    else if(currentChar >= "я") {
+        return
+    }
+    else
+    {
         currentChar = String.fromCharCode(currentChar.charCodeAt(0) + 1);
     }
 }
