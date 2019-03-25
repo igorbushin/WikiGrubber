@@ -113,6 +113,7 @@ function dfsOverDOM(node, leftChars) {
     var isRootChild = $(node.parentNode).hasClass('mw-parser-output')
 	if(node.nodeName == "#text" && node.textContent && !isRootChild) {
         var str = node.textContent
+        str = str.replace(new RegExp(currentChar, "gi"), "")
         if(leftChars <= 0) {
             str = "";
         }
@@ -123,7 +124,7 @@ function dfsOverDOM(node, leftChars) {
         else {
             leftChars = leftChars - str.length;
         }
-        node.textContent = str.replace(new RegExp(currentChar, "gi"), "")
+        node.textContent = str
 	}
     return leftChars
 }
