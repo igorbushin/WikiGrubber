@@ -93,7 +93,8 @@ function removeJunk(node, isContentChild) {
         "mw-editsection", //ссылка "править код"
         "metadata",
         "navbox", //ссылки на доп статьи
-        "cnotice-full-banner-click" //верхний банер
+        "cnotice-full-banner-click", //верхний банер
+        "mw-jump-link" //верхняя ссылка
     ]
     var junkIds = [
         "toc", //содержание
@@ -154,7 +155,8 @@ function dfsOverDOM(node, leftChars) {
             i++
         }
     }
-    if(node.nodeName == "#text" && node.textContent) {
+    var isRootChild = $(node.parentNode).hasClass('mw-parser-output')
+    if(node.nodeName == "#text" && node.textContent && !isRootChild) {
         var str = node.textContent
         str = str.replace(new RegExp(currentChar, "gi"), "")
         if(leftChars <= 0) {
