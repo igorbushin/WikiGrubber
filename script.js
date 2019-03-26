@@ -1,14 +1,12 @@
 var originalContent
 var currentChar
-var contentHolder
 
 $(document).ready(function() {
-    contentHolder = document.getElementById("contentHolder")
     var charsCount = document.getElementById("charsCount");
     var fetchButton = document.getElementById('fetchButton');
     charsCount.addEventListener('keyup', function (event) {
-      isValidNumber = charsCount.checkValidity();
-      fetchButton.disabled = !isValidNumber
+        isValidNumber = charsCount.checkValidity();
+        fetchButton.disabled = !isValidNumber
     });
     $('form').submit(false);
 })
@@ -37,10 +35,20 @@ function updateCurrentChar() {
 }
 
 function loadContent(onComplete) {
-    var url = "HTMLff.htm"
+    //var url = "HTMLff.htm"
+    var url = "https://ru.wikipedia.org/wiki/HTML"
+    
     var tmpDOM = document.createElement("div")
-    $(tmpDOM).load(url, function() {
+    //$(tmpDOM).load(url, function() {
+    
+    doCORSRequest({
+        method:"get",
+        url: url,
+        data: ""
+    }, 
+    function (result) {
         originalContent = document.createElement("div")
+        $(tmpDOM).html(result)
         $(tmpDOM).children("div").each(function(index, element) {
             originalContent.appendChild(element.cloneNode(true))
             tmpDOM.removeChild(element)
@@ -50,10 +58,27 @@ function loadContent(onComplete) {
         // $(tmpDOM).children().each(function(index, element) {
         //     document.head.appendChild(element.cloneNode(true))
         // })
+
+        var contentHolder = document.getElementById("contentHolder")
         $(contentHolder).empty()
         contentHolder.appendChild(originalContent.cloneNode(true))
         onComplete()
     })
+}
+
+
+function doCORSRequest(options, onComplete) {
+    var x = new XMLHttpRequest();
+    var cors_api_url = 'https://cors-anywhere.herokuapp.com/';
+    x.open(options.method, cors_api_url + options.url);
+    x.onload = x.onerror = function() {
+        console.log(options.method + ' ' + options.url + '\n' + x.status + ' ' + x.statusText)
+        onComplete(x.responseText || '')
+    };
+    if (/^POST/i.test(options.method)) {
+      x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    }
+    x.send(options.data);
 }
 
 function removeJunk(node, isContentChild) {
@@ -67,10 +92,14 @@ function removeJunk(node, isContentChild) {
         "vertical-navbox", //список с доп информацией
         "mw-editsection", //ссылка "править код"
         "metadata",
-        "navbox" //ссылки на доп статьи
+        "navbox", //ссылки на доп статьи
+        "cnotice-full-banner-click" //верхний банер
     ]
-    var junkIds = ["toc"]
-    var junkTags = ["style"]
+    var junkIds = [
+        "toc", //содержание
+        "top" //ссылка наверху
+    ]
+    var junkTags = ["style", "noscript"]
     junkClasses.forEach(function(junkClass) {
         if($(node).hasClass(junkClass)) {
             node.remove()
@@ -106,10 +135,11 @@ function removeJunk(node, isContentChild) {
 
 function handleContent() {
     //перезапись контента
+    //var contentHolder = document.getElementById("contentHolder")
     //$(contentHolder).empty()
     //contentHolder.appendChild(originalContent.cloneNode(true))
     var charsCount = parseInt($("#charsCount").val())
-    console.log("now i will remove char "+currentChar+" and crap up to "+charsCount+" symbols")
+    //console.log("now i will remove char "+currentChar+" and crap up to "+charsCount+" symbols")
     var contentText = document.getElementById("mw-content-text")
     dfsOverDOM(contentText, charsCount)
 }
@@ -124,8 +154,7 @@ function dfsOverDOM(node, leftChars) {
             i++
         }
     }
-    var isRootChild = $(node.parentNode).hasClass('mw-parser-output')
-    if(node.nodeName == "#text" && node.textContent && !isRootChild) {
+    if(node.nodeName == "#text" && node.textContent) {
         var str = node.textContent
         str = str.replace(new RegExp(currentChar, "gi"), "")
         if(leftChars <= 0) {
